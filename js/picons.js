@@ -46,7 +46,9 @@ var drawGlyphBoxes = function (container, glyphsObject, optKeys) {
 var glyphSection = document.getElementById("glyphs");
 var search = document.getElementById("search");
 var downloadButton = document.getElementById("download-btn");
+var bannerLogo = document.getElementById('banner-logo');
 var glyphElements = {};
+bannerLogo.setAttribute('style', "opacity: 0.5;");
 
 search.addEventListener("keyup", function (e) {
     var value = e.target.value;
@@ -70,7 +72,8 @@ var fetchIcons = function () {
         var cssFileUrl = "https://rawcdn.githack.com/Panintelligence/picons/"+refInfo.object['sha']+"/dist/css/picons-charts.css"
         var logoUrl = "https://rawcdn.githack.com/Panintelligence/picons/"+refInfo.object['sha']+"/changes/images/picons-logo.svg"
         document.getElementsByTagName('body')[0].getElementsByTagName('link')[0].href = cssFileUrl;
-        document.getElementById('banner-logo').setAttribute('src', logoUrl);
+        bannerLogo.setAttribute('src', logoUrl);
+        bannerLogo.setAttribute('style', "opacity: 1;");
         textGET(cssFileUrl, function(response){
             var iconClasses = extractIcons(response);
             for (var i = 0; i < iconClasses.length; i++) {

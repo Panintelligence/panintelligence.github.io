@@ -36,6 +36,7 @@ var projectPages = ["picons"];
 var ignoreProjects = ["panintelligence.github.io"];
 var projectList = document.getElementById("project-list");
 github.projects(function (projectsInfo) {
+    projectList.innerHTML = "";
     for (var i = 0; i < projectsInfo.length; i++) {
         var projectName = projectsInfo[i]['name'];
         if (projectsInfo[i] && ignoreProjects.indexOf(projectName) === -1) {
