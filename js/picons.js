@@ -1,5 +1,5 @@
 var extractIcons = function (cssContent) {
-    return cssContent.split(/\.picons/).join("\n.picons").match(/\.picons-charts-.*:before/g)
+    return cssContent.split(/\.picons/).join("\n.picons").match(/\.picons-charts-.*:before/g) || []
 }
 
 var makeGlyphBox = function (classname) {
@@ -75,7 +75,7 @@ var fetchIcons = function () {
         bannerLogo.setAttribute('src', logoUrl);
         bannerLogo.setAttribute('style', "opacity: 1;");
         textGET(cssFileUrl, function(response){
-            var iconClasses = extractIcons(response);
+            var iconClasses = extractIcons(response).sort();
             for (var i = 0; i < iconClasses.length; i++) {
                 var glyphElement = makeGlyphBox(iconClasses[i])
                 glyphElements[iconClasses[i]] = glyphElement;
@@ -91,5 +91,5 @@ var fetchIcons = function () {
 fetchIcons();
 github.release("picons", "latest", function (info) {
     downloadButton.innerHTML = "Download " + info['tag_name'];
-    downloadButton.setAttribute("href", info['zipball_url']);
+    downloadButton.setAttribute("href", info.assets[0]['browser_download_url']);
 });
