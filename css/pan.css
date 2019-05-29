@@ -197,6 +197,7 @@ a.button.block {
     flex-wrap: wrap;
 }
 
+[class^="picons-data-"], [class*=" picons-data-"],
 [class^="picons-charts-"], [class*=" picons-charts-"] {
     font-size:5em;
 }

@@ -1,5 +1,9 @@
-var extractIcons = function (cssContent) {
-    return cssContent.split(/\.picons/).join("\n.picons").match(/\.picons-charts-.*:before/g) || []
+var glyphElements = {};
+
+
+var extractIcons = function (cssContent, iconset) {
+    var regexp = new RegExp("\.picons-" + iconset + "-.*:before", "g");
+    return cssContent.split(/\.picons/).join("\n.picons").match(regexp) || []
 }
 
 var makeGlyphBox = function (classname) {
@@ -43,13 +47,46 @@ var drawGlyphBoxes = function (container, glyphsObject, optKeys) {
     }
 }
 
-var glyphSection = document.getElementById("glyphs");
-var search = document.getElementById("search");
-var downloadButton = document.getElementById("download-btn");
-var bannerLogo = document.getElementById('banner-logo');
-var glyphElements = {};
-bannerLogo.setAttribute('style', "opacity: 0.5;");
+var fillBannerLogo = function () {
+    var bannerLogo = document.getElementById('banner-logo');
+    bannerLogo.setAttribute('style', "opacity: 0.5;");
+    github.ref("picons", function (refInfo) {
+        var logoUrl = "https://rawcdn.githack.com/Panintelligence/picons/" + refInfo.object['sha'] + "/changes/images/picons-logo.svg"
+        bannerLogo.setAttribute('src', logoUrl);
+        bannerLogo.setAttribute('style', "opacity: 1;");
+    });
+};
 
+var drawGlyphsFromCss = function (response, section, iconset) {
+    var iconClasses = extractIcons(response, iconset).sort();
+    for (var j = 0; j < iconClasses.length; j++) {
+        var glyphElement = makeGlyphBox(iconClasses[j])
+        glyphElements[iconClasses[j]] = glyphElement;
+    }
+    drawGlyphBoxes(section, glyphElements);
+}
+
+var fetchIcons = function (iconsets, section) {
+    var cssLinks = document.getElementsByTagName('body')[0].getElementsByTagName('link');
+    github.ref("picons", function (refInfo) {
+        for (var i = 0; i < iconsets.length; i++) {
+            var cssFileUrl = "https://rawcdn.githack.com/Panintelligence/picons/" + refInfo.object['sha'] + "/dist/css/picons-" + iconsets[i] + ".css"
+            cssLinks[i].href = cssFileUrl;
+            textGET(cssFileUrl, (function(i){
+                return function(response){
+                    drawGlyphsFromCss(response, section, iconsets[i]);
+                }
+            })(i));
+        }
+    });
+}
+
+fillBannerLogo();
+
+var glyphSection = document.getElementById("glyphs");
+fetchIcons(["charts", "data"], glyphSection);
+
+var search = document.getElementById("search");
 search.addEventListener("keyup", function (e) {
     var value = e.target.value;
     if (value === "") {
@@ -67,28 +104,7 @@ search.addEventListener("keyup", function (e) {
     }
 });
 
-var fetchIcons = function () {
-    github.ref("picons", function (refInfo) {
-        var cssFileUrl = "https://rawcdn.githack.com/Panintelligence/picons/"+refInfo.object['sha']+"/dist/css/picons-charts.css"
-        var logoUrl = "https://rawcdn.githack.com/Panintelligence/picons/"+refInfo.object['sha']+"/changes/images/picons-logo.svg"
-        document.getElementsByTagName('body')[0].getElementsByTagName('link')[0].href = cssFileUrl;
-        bannerLogo.setAttribute('src', logoUrl);
-        bannerLogo.setAttribute('style', "opacity: 1;");
-        textGET(cssFileUrl, function(response){
-            var iconClasses = extractIcons(response).sort();
-            for (var i = 0; i < iconClasses.length; i++) {
-                var glyphElement = makeGlyphBox(iconClasses[i])
-                glyphElements[iconClasses[i]] = glyphElement;
-            }
-            drawGlyphBoxes(glyphSection, glyphElements);
-        })
-        refInfo.object['sha']
-    });
-}
-
-
-
-fetchIcons();
+var downloadButton = document.getElementById("download-btn");
 github.release("picons", "latest", function (info) {
     downloadButton.innerHTML = "Download " + info['tag_name'];
     downloadButton.setAttribute("href", info.assets[0]['browser_download_url']);
