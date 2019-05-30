@@ -1,5 +1,8 @@
-var glyphElements = {};
-
+var glyphElements = {
+    "charts": {},
+    "data": {}
+};
+var iconSetSectionElements = {};
 
 var extractIcons = function (cssContent, iconset) {
     var regexp = new RegExp("\.picons-" + iconset + "-.*:before", "g");
@@ -57,16 +60,36 @@ var fillBannerLogo = function () {
     });
 };
 
-var drawGlyphsFromCss = function (response, section, iconset) {
+var createGlyphElementsFromCss = function (response, iconset) {
     var iconClasses = extractIcons(response, iconset).sort();
     for (var j = 0; j < iconClasses.length; j++) {
         var glyphElement = makeGlyphBox(iconClasses[j])
-        glyphElements[iconClasses[j]] = glyphElement;
+        glyphElements[iconset][iconClasses[j]] = glyphElement;
     }
-    drawGlyphBoxes(section, glyphElements);
 }
 
-var fetchIcons = function (iconsets, section) {
+var createIconsetSection = function(iconset) {
+    var iconsetSection = document.createElement("div");
+    iconsetSection.className = "iconset-section";
+
+    var iconsetName = document.createElement("h2");
+    iconsetName.className = "iconset-section-name";
+    iconsetName.innerHTML = iconset;
+
+    var iconsetSectionIconContainer = document.createElement("div");
+    iconsetSectionIconContainer.className = "iconset-section-icons";
+
+    iconsetSection.append(iconsetName);
+    iconsetSection.append(iconsetSectionIconContainer);
+
+    return {
+        container: iconsetSection,
+        title: iconsetName,
+        iconContainer: iconsetSectionIconContainer
+    };
+}
+
+var fetchIcons = function (iconsets, allIconSetSections) {
     var cssLinks = document.getElementsByTagName('body')[0].getElementsByTagName('link');
     github.ref("picons", function (refInfo) {
         for (var i = 0; i < iconsets.length; i++) {
@@ -74,7 +97,9 @@ var fetchIcons = function (iconsets, section) {
             cssLinks[i].href = cssFileUrl;
             textGET(cssFileUrl, (function(i){
                 return function(response){
-                    drawGlyphsFromCss(response, section, iconsets[i]);
+                    document.getElementById("loading-msg").className = "hide";
+                    createGlyphElementsFromCss(response, iconsets[i]);
+                    drawGlyphBoxes(allIconSetSections[iconsets[i]].iconContainer, glyphElements[iconsets[i]]);
                 }
             })(i));
         }
@@ -84,23 +109,37 @@ var fetchIcons = function (iconsets, section) {
 fillBannerLogo();
 
 var glyphSection = document.getElementById("glyphs");
-fetchIcons(["charts", "data"], glyphSection);
+var definedIconSets = Object.keys(glyphElements);
+for(var i=0; i<definedIconSets.length; i++){
+    iconSetSectionElements[definedIconSets[i]] = createIconsetSection(definedIconSets[i]);
+    iconSetSectionElements[definedIconSets[i]].title.innerHTML = definedIconSets[i] +
+        " <code class='css-link'>&lt;<span class='syntax-tag'>link</span> <span class='syntax-property'>href=</span><span class='syntax-string'>'" +
+        "/styles/picons-" + definedIconSets[i] + ".css" +
+        "'</span> <span class='syntax-property'>rel=</span><span class='syntax-string'>'stylesheet'</span>&gt;</code>"
+    glyphSection.append(iconSetSectionElements[definedIconSets[i]].container);
+}
+
+fetchIcons(definedIconSets, iconSetSectionElements);
 
 var search = document.getElementById("search");
 search.addEventListener("keyup", function (e) {
     var value = e.target.value;
     if (value === "") {
-        drawGlyphBoxes(glyphSection, glyphElements);
+        for(var s=0; s<definedIconSets.length; s++){
+            drawGlyphBoxes(iconSetSectionElements[definedIconSets[s]].iconContainer, glyphElements[definedIconSets[s]]);
+        }
     }
     else {
-        var allKeys = Object.keys(glyphElements)
-        var keys = [];
-        for (var i = 0; i < allKeys.length; i++) {
-            if (allKeys[i].indexOf(value) >= 0) {
-                keys.push(allKeys[i]);
+        for(var s=0; s<definedIconSets.length; s++){
+            var allKeys = Object.keys(glyphElements[definedIconSets[s]])
+            var keys = [];
+            for (var i = 0; i < allKeys.length; i++) {
+                if (allKeys[i].indexOf(value) >= 0) {
+                    keys.push(allKeys[i]);
+                }
             }
+            drawGlyphBoxes(iconSetSectionElements[definedIconSets[s]].iconContainer, glyphElements[definedIconSets[s]], keys);
         }
-        drawGlyphBoxes(glyphSection, glyphElements, keys);
     }
 });
 
