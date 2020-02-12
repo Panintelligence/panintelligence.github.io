@@ -33,7 +33,7 @@ var drawProject = function (project, sha, specialProjectPages) {
 
 
 var projectPages = ["picons"];
-var ignoreProjects = ["panintelligence.github.io", "exp4j"];
+var ignoreProjects = ["panintelligence.github.io", "exp4j", "installation-example-node"];
 var projectList = document.getElementById("project-list");
 github.projects(function (projectsInfo) {
     projectList.innerHTML = "";
