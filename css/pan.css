@@ -236,6 +236,7 @@ a.button.block {
     font-family: 'Monospace';
     min-height: 70px;
     padding:16px;
+    word-break: break-all;
 }
 
 .glyph-code {
