@@ -3,8 +3,7 @@
 }
 
 body {
-    background: #000B73;
-    color: #1D1D1B;
+    background: #1a1a1a;
     font-family: "Source Sans Pro", sans-serif;
     font-size: 16px;
     font-weight: 300;
@@ -15,7 +14,7 @@ body {
 
 a {
     font-family: "Source Sans Pro", sans-serif;
-    color: #FF8F33;
+    color: #d80751;
     text-decoration: none;
 }
 
@@ -30,9 +29,9 @@ img {
 
 a.button {
     cursor: pointer;
-    background: #FF8F33;
+    background: #d80751;
     color: #fff;
-    border: 2px solid #FF8F33;
+    border: 2px solid #d80751;
     line-height: 52px;
     font-weight: 700;
 
@@ -43,16 +42,12 @@ a.button {
     text-align: center;
     padding: 0;
     font-size: 15px;
-
-    border-radius: 27px;
-    -webkit-border-radius: 27px;
-    -moz-border-radius: 27px;
 }
 
 a.button.secondary:hover,
 a.button:hover {
-    background: #fff;
-    color: #FF8F33;
+    background: #8d175c;
+    border: 2px solid #8d175c;
 }
 
 a.button.secondary {
@@ -64,6 +59,14 @@ a.button.block {
     margin: 10px 0;
 }
 
+.banner,
+.header-content,
+.projects-content,
+.footer-content,
+.content {
+    max-width: 1380px;
+}
+
 .flex {
     display: flex;
     justify-content: space-between;
@@ -71,7 +74,7 @@ a.button.block {
 
 .header {
     padding: 29px 0;
-    background: rgba(255, 255, 255, 0.1);
+    background: #222c3c;
     -webkit-box-shadow: 0 0 10px 4px rgba(0, 0, 0, 0.1);
     -moz-box-shadow: 0 0 10px 4px rgba(0, 0, 0, 0.1);
     box-shadow: 0 0 10px 4px rgba(0, 0, 0, 0.1);
@@ -87,7 +90,6 @@ a.button.block {
 .header-content {
     display: flex;
     justify-content: space-between;
-    max-width: 1380px;
     margin-left: auto;
     margin-right: auto;
 }
@@ -99,7 +101,6 @@ a.button.block {
 
 .banner {
     font-family: monospace, sans-serif;
-    max-width: 1380px;
     margin-top: 25px;
     margin-left: auto;
     margin-right: auto;
@@ -122,7 +123,7 @@ a.button.block {
 }
 
 .social-icon:hover {
-    fill: #FF8F33;
+    fill: #d80751;
 }
 
 .social-icon {
@@ -146,10 +147,9 @@ a.button.block {
 }
 
 .projects-content {
-    max-width: 1380px;
     margin-left: auto;
     margin-right: auto;
-    color: #1D1D1B;
+    color: #182233;
     display: flex;
     justify-content: space-evenly;
 }
@@ -171,7 +171,7 @@ a.button.block {
 }
 
 .project > .logo > div {
-    color: #FF8F33;
+    color: #d80751;
     margin-top: 5px;
 }
 
@@ -189,7 +189,6 @@ a.button.block {
 }
 
 .content {
-    max-width: 1380px;
     margin-left: auto;
     margin-right: auto;
     color: #1D1D1B;
@@ -260,35 +259,38 @@ input.searchbox {
 }
 
 .footer {
-    background: #ECECEC;
+    background: #222c3c;
     padding: 90px 0;
 }
 
 .footer-content {
     display: flex;
     justify-content: space-between;
-    max-width: 1380px;
     margin-left: auto;
     margin-right: auto;
 }
 
 .footer-content .social svg{
-    color: #1D1D1B;
-    fill: #1D1D1B;
+    color: #fff;
+    fill: #fff;
+}
+
+.footer-content .social svg:hover {
+    fill: #d80751;
 }
 
 footer {
-    background: #fff;
+    background: #222c3c;
 }
 
 footer > .footer-content {
     display: flex;
-    justify-content: flex-end;
+    justify-content: center;
     padding: 35px 0;
 }
 
 .copyright-text {
-    color: #1D1D1B;
+    color: #fff;
 }
 
 .hide {
